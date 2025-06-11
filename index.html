@@ -70,7 +70,10 @@
 <body>
 
   <!-- Background Music -->
-  <audio id="bgMusic" src="audio.mp3" preload="auto" loop></audio>
+  <audio class="song" id="bgMusic" loop>
+    <source src="audio.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
 
   <!-- Images will be injected here -->
   <div id="imageContainer"></div>
@@ -103,23 +106,17 @@
       container.appendChild(img);
     }
 
-    // Audio play on first interaction (mobile or desktop)
     const audio = document.getElementById('bgMusic');
-    let audioPlayed = false;
 
-    function startMusic() {
-      if (!audioPlayed) {
-        audio.play().catch(err => console.log('Autoplay blocked:', err));
-        audioPlayed = true;
-
-        // Remove listeners after first interaction
-        document.removeEventListener('touchstart', startMusic);
-        document.removeEventListener('click', startMusic);
-      }
+    // Start audio on first touch or click
+    function playMusic() {
+      audio.play().catch(err => console.log('Autoplay blocked:', err));
+      document.removeEventListener('touchstart', playMusic);
+      document.removeEventListener('click', playMusic);
     }
 
-    document.addEventListener('touchstart', startMusic);
-    document.addEventListener('click', startMusic);
+    document.addEventListener('touchstart', playMusic);
+    document.addEventListener('click', playMusic);
 
     // Dragging functionality
     const images = document.querySelectorAll('.image-layer');

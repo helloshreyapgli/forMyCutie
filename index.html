@@ -97,7 +97,6 @@
     img.classList.add('image-layer');
     img.dataset.index = i;
 
-    // Apply random rotation and slight offset
     const randomAngle = Math.floor(Math.random() * 40 - 20);
     const offsetX = Math.floor(Math.random() * 20 - 10);
     const offsetY = Math.floor(Math.random() * 20 - 10);
@@ -108,15 +107,24 @@
     container.appendChild(img);
   }
 
-  // Play music on first tap anywhere
-  window.addEventListener('pointerdown', () => {
+  // Best cross-device solution
+  function startMusic() {
     if (!audioPlayed) {
-      document.getElementById('bgMusic').play().catch(e => {
-        console.log('Autoplay failed:', e);
+      const audio = document.getElementById('bgMusic');
+      audio.play().catch(err => {
+        console.log('Autoplay blocked:', err);
       });
       audioPlayed = true;
+
+      // Once started, remove the listener to prevent unnecessary calls
+      document.removeEventListener('click', startMusic);
+      document.removeEventListener('touchstart', startMusic);
     }
-  }, { once: true }); // Ensures it triggers only on the first tap
+  }
+
+  // Start music on first click or touch anywhere on screen
+  document.addEventListener('click', startMusic);
+  document.addEventListener('touchstart', startMusic);
 
   // Dragging functionality
   const images = document.querySelectorAll('.image-layer');
@@ -148,6 +156,8 @@
     window.addEventListener('pointerup', onPointerUp);
   });
 </script>
+
+
 
 </body>
 
